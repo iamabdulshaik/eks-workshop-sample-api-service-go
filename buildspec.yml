@@ -43,7 +43,10 @@ phases:
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       # Apply changes to our Application using kubectl
       - echo "Apply changes to kube manifests"            
-      - kubectl apply -f kube-manifests/
+      - kubectl apply -f DEVOPS-Nginx-Deployment.yml
+      - kubectl apply -f DEVOPS-Nginx-NodePortService.yml
+      - kubectl apply -f DEVOPS-Nginx-ALB-IngressService.yml
+      
       - echo "Completed applying changes to Kubernetes Objects"           
       # Create Artifacts which we can use if we want to continue our pipeline for other stages
       - printf '[{"name":"01-DEVOPS-Nginx-Deployment.yml","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > build.json
@@ -56,5 +59,4 @@ phases:
       #- echo "EKS_CLUSTER_NAME...  $EKS_CLUSTER_NAME"             
 artifacts:
   files: 
-    - build.json   
-    - kube-manifests/*
+    - build.json
