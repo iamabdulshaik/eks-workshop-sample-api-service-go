@@ -2,7 +2,12 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Install Phase - Nothing to do using latest Amazon Linux Docker Image for CodeBuild which has all AWS Tools - https://github.com/aws/aws-codebuild-docker-images/blob/master/al2/x86_64/standard/3.0/Dockerfile"
+       - echo Installing app dependencies...
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/kubectl   
+      - chmod +x ./kubectl
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+      - source ~/.bashrc
   pre_build:
       commands:
         # Docker Image Tag with Date Time & Code Buiild Resolved Source Version
@@ -40,7 +45,7 @@ phases:
       - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
       # Setup kubectl with our EKS Cluster              
       - echo "Update Kube Config"      
-      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
+      - aws eks --region us-east-1 update-kubeconfig  --name $EKS_CLUSTER_NAME
        # Apply changes to our Application using kubectl
       - echo "Apply changes to kube manifests"
       - kubectl get namespaces
