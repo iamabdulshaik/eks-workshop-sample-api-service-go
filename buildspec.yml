@@ -42,7 +42,8 @@ phases:
       - echo "Update Kube Config"      
       - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME
       # Apply changes to our Application using kubectl
-      - echo "Apply changes to kube manifests"            
+      - echo "Apply changes to kube manifests"
+      - kubectl get namespaces
       - kubectl apply -f DEVOPS-Nginx-Deployment.yml
       - kubectl apply -f DEVOPS-Nginx-NodePortService.yml
       - kubectl apply -f DEVOPS-Nginx-ALB-IngressService.yml
